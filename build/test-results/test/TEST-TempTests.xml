@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TempTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-12-07T19:39:38" hostname="NANIT-PC" time="0.113">
+  <properties/>
+  <testcase name="test()" classname="TempTests" time="0.113"/>
+  <system-out><![CDATA[Entry bool
+Entry str
+Entry int
+Entry list
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
