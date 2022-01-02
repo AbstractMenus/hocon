@@ -5,17 +5,17 @@ import ru.abstractmenus.hocon.api.Preconditions;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 
-public class IntegerSerializer implements NodeSerializer<Integer> {
+public class LongSerializer implements NodeSerializer<Long> {
 
     @Override
-    public Integer deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public Long deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
-        if (obj instanceof Integer) return (Integer) obj;
+        if (obj instanceof Long) return (Long) obj;
         try {
-            return Integer.parseInt(obj.toString());
+            return Long.parseLong(obj.toString());
         } catch (NumberFormatException e) {
-            throw new NodeSerializeException(node, "Cannot parse int from '" + obj + "'");
+            throw new NodeSerializeException(node, "Cannot parse long from '" + obj + "'");
         }
     }
 

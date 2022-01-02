@@ -3,6 +3,7 @@ package ru.abstractmenus.hocon.api.serialize;
 import ru.abstractmenus.hocon.api.serialize.defaults.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,8 +22,9 @@ public class NodeSerializers {
         return serializer;
     }
 
-    public <T> void register(Class<T> type, NodeSerializer<T> serializer) {
+    public <T> NodeSerializers register(Class<T> type, NodeSerializer<T> serializer) {
         serializers.put(type, serializer);
+        return this;
     }
 
     /**
@@ -34,12 +36,13 @@ public class NodeSerializers {
         Map<Class<?>, NodeSerializer<?>> map = new HashMap<>();
 
         map.put(Boolean.class, new BooleanSerializer());
-        map.put(Double.class, new DoubleSerializer());
-        map.put(Float.class, new FloatSerializer());
         map.put(Integer.class, new IntegerSerializer());
         map.put(Long.class, new LongSerializer());
+        map.put(Float.class, new FloatSerializer());
+        map.put(Double.class, new DoubleSerializer());
         map.put(String.class, new StringSerializer());
         map.put(UUID.class, new UuidSerializer());
+        map.put(List.class, new ListSerializer());
 
         return new NodeSerializers(map);
     }

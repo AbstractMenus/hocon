@@ -115,6 +115,7 @@ public class SimpleConfigNode implements ConfigNode {
 
     @Override
     public <T> T getValue(Class<T> type, T def) throws NodeSerializeException {
+        if (isNull()) return def;
         NodeSerializer<T> serializer = serializers.getSerializer(type);
         return serializer.deserialize(type, this);
     }

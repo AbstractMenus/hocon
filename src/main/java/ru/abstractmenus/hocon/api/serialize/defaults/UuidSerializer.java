@@ -5,17 +5,19 @@ import ru.abstractmenus.hocon.api.Preconditions;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 
-public class IntegerSerializer implements NodeSerializer<Integer> {
+import java.util.UUID;
+
+public class UuidSerializer implements NodeSerializer<UUID> {
 
     @Override
-    public Integer deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public UUID deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
-        if (obj instanceof Integer) return (Integer) obj;
+        if (obj instanceof UUID) return (UUID) obj;
         try {
-            return Integer.parseInt(obj.toString());
-        } catch (NumberFormatException e) {
-            throw new NodeSerializeException(node, "Cannot parse int from '" + obj + "'");
+            return UUID.fromString(node.getString());
+        } catch (Exception e) {
+            throw new NodeSerializeException(node, "Cannot parse UUID: " + e.getMessage());
         }
     }
 

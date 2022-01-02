@@ -1,5 +1,7 @@
 package ru.abstractmenus.hocon.api.serialize;
 
+import ru.abstractmenus.hocon.api.ConfigNode;
+
 public class NodeSerializeException extends Exception {
 
     public NodeSerializeException(String message) {
@@ -12,5 +14,9 @@ public class NodeSerializeException extends Exception {
 
     public NodeSerializeException(Throwable cause) {
         super(cause);
+    }
+
+    public NodeSerializeException(ConfigNode node, String message) {
+        super((node.wrapped().origin().lineNumber() != -1 ? "[line "+node.wrapped().origin().lineNumber()+"]" : "") + message);
     }
 }

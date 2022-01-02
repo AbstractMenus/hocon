@@ -18,7 +18,7 @@ import ru.abstractmenus.hocon.ConfigValueType;
  * not.
  *
  */
-final class ConfigNull extends AbstractConfigValue implements Serializable {
+public final class ConfigNull extends AbstractConfigValue implements Serializable {
 
     private static final long serialVersionUID = 2L;
 

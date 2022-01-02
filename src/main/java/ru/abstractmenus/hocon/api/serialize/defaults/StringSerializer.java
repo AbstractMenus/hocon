@@ -5,13 +5,14 @@ import ru.abstractmenus.hocon.api.Preconditions;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 
-public class BooleanSerializer implements NodeSerializer<Boolean> {
+public class StringSerializer implements NodeSerializer<String> {
 
     @Override
-    public Boolean deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public String deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
-        return obj instanceof Boolean ? (Boolean) obj : obj.toString().equalsIgnoreCase("true");
+        if (obj instanceof String) return (String) obj;
+        return obj.toString();
     }
 
 }
