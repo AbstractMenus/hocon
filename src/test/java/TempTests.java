@@ -23,9 +23,11 @@ public class TempTests {
 
         System.out.println(node.toString());
         System.out.println(node.node("map", "param1").getString());
+        System.out.println(node.node("map", "param15").getString());
         System.out.println(node.node("list").getList(String.class));
         System.out.println(node.node("list_of_lists").getList(List.class));
         System.out.println(node.node("user").getValue(User.class));
+        System.out.println(node.node("users").getList(User.class));
     }
 
     private class User {

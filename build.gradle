@@ -1,8 +1,10 @@
 plugins {
-    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java-library'
+    id 'maven-publish'
 }
 
-group 'ru.nanit'
+group 'ru.abstractmenus'
 version '1.0'
 
 repositories {
@@ -13,9 +15,29 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
-    implementation project(":typesafe")
+    api project(":typesafe")
+}
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 test {
     useJUnitPlatform()
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) { publication ->
+            project.shadow.component(publication)
+            artifact javadocJar
+            artifact sourcesJar
+        }
+    }
+}
+
