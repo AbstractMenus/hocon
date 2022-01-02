@@ -10,7 +10,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializers;
 
 import java.util.*;
 
-public class SimpleConfigNode implements ConfigNode {
+class SimpleConfigNode implements ConfigNode {
 
     private final NodeSerializers serializers;
     private final String key;

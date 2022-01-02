@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Collection of serializers
+ */
 public class NodeSerializers {
 
     private final Map<Class<?>, NodeSerializer<?>> serializers;
@@ -15,6 +18,13 @@ public class NodeSerializers {
         this.serializers = serializers;
     }
 
+    /**
+     * Get serializer of specified type
+     * @param type Value type
+     * @param <T> Value type
+     * @return Found serializer
+     * @throws NodeSerializeException if serializer for specified type not found
+     */
     public <T> NodeSerializer<T> getSerializer(Class<T> type) throws NodeSerializeException {
         NodeSerializer<T> serializer = (NodeSerializer<T>) serializers.get(type);
         if (serializer == null)
@@ -22,6 +32,13 @@ public class NodeSerializers {
         return serializer;
     }
 
+    /**
+     * Register own serializer for some type
+     * @param type Type of value
+     * @param serializer Serializer implementation
+     * @param <T> Type of value
+     * @return Current serializers collection instance
+     */
     public <T> NodeSerializers register(Class<T> type, NodeSerializer<T> serializer) {
         serializers.put(type, serializer);
         return this;
