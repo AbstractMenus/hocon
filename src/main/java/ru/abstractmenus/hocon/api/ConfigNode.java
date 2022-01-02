@@ -1,34 +1,53 @@
 package ru.abstractmenus.hocon.api;
 
+import ru.abstractmenus.hocon.ConfigValue;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface ConfigNode extends ConfigValue {
+public interface ConfigNode {
 
-    Object key();
+    ConfigValue wrapped();
 
-    Object[] path();
+    String key();
 
-    void setValue(Object value) throws NodeSerializeException;
+    String[] path();
+
+    ConfigNode parent();
+
+    ConfigNode node(String... path);
+
+    ConfigNode child(String key);
+
+    boolean hasChildren();
+
+    boolean isList();
+
+    boolean isMap();
+
+    boolean isPrimitive();
+
+    boolean isNull();
+
+    Object rawValue();
+
+    default <T> T getValue(Class<T> type) throws NodeSerializeException {
+        return getValue(type, null);
+    }
+
+    <T> T getValue(Class<T> type, T def) throws NodeSerializeException;
+
+    <T> List<T> getList(Class<T> type) throws NodeSerializeException;
+
+    List<ConfigNode> childrenList();
+
+    Map<String, ConfigNode> childrenMap();
 
     boolean getBoolean(boolean def);
 
     default boolean getBoolean() {
         return getBoolean(false);
-    }
-
-    byte getByte(byte def);
-
-    default byte getByte() {
-        return getByte((byte) 0);
-    }
-
-    short getShort(short def);
-
-    default short getShort() {
-        return getShort((short) 0);
     }
 
     int getInt(int def);

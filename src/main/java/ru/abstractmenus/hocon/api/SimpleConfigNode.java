@@ -1,148 +1,175 @@
 package ru.abstractmenus.hocon.api;
 
+import ru.abstractmenus.hocon.ConfigList;
+import ru.abstractmenus.hocon.ConfigObject;
+import ru.abstractmenus.hocon.ConfigValue;
+import ru.abstractmenus.hocon.ConfigValueType;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
-import ru.abstractmenus.hocon.api.value.ValueList;
-import ru.abstractmenus.hocon.api.value.ValueMap;
-import ru.abstractmenus.hocon.api.value.ValueNull;
-import ru.abstractmenus.hocon.api.value.ValueScalar;
+import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
+import ru.abstractmenus.hocon.api.serialize.NodeSerializers;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SimpleConfigNode implements ConfigNode {
 
-    private final ConfigurationLoader loader;
-    private final Object key;
-    private final Object[] path;
+    private final NodeSerializers serializers;
+    private final String key;
+    private final ConfigNode parent;
+    private final ConfigValue wrapped;
 
-    private ConfigValue value;
-
-    public SimpleConfigNode(Object[] path, ConfigurationLoader loader) {
-        this.path = path;
-        this.key = path != null ? path[path.length - 1] : null;
-        this.loader = loader;
-        this.value = new ValueNull();
-    }
-
-    public ConfigurationLoader getLoader() {
-        return loader;
+    public SimpleConfigNode(String key, ConfigNode parent, ConfigValue wrapped, NodeSerializers serializers) {
+        this.key = key;
+        this.parent = parent;
+        this.wrapped = wrapped;
+        this.serializers = serializers;
     }
 
     @Override
-    public Object key() {
+    public ConfigValue wrapped() {
+        return wrapped;
+    }
+
+    @Override
+    public String key() {
         return key;
     }
 
     @Override
-    public Object[] path() {
-        return path;
+    public String[] path() {
+        LinkedList<String> path = new LinkedList<>();
+        ConfigNode node = this;
+
+        while (node != null) {
+            path.addFirst(node.key());
+            node = node.parent();
+        }
+
+        return path.toArray(new String[0]);
     }
 
     @Override
-    public ConfigNode node(Object... path) {
+    public ConfigNode parent() {
+        return parent;
+    }
+
+    @Override
+    public ConfigNode node(String... path) {
         ConfigNode node = this;
-
-        for (Object key : path) {
+        for (String key : path)
             node = node.child(key);
-        }
-
         return node;
     }
 
     @Override
-    public ConfigNode child(Object key) {
-        return value.child(key);
+    public ConfigNode child(String key) {
+        if (key == null) throw new IllegalArgumentException("Node key cannot be null");
+
+        if (wrapped instanceof ConfigObject) {
+            ConfigObject obj = (ConfigObject) wrapped;
+            ConfigValue val = obj.get(key);
+
+            if (val != null)
+                return new SimpleConfigNode(key, this, val, serializers);
+        }
+
+        return new SimpleConfigNode(key, this, null, serializers);
     }
 
     @Override
     public boolean hasChildren() {
-        return value.hasChildren();
+        if (wrapped instanceof ConfigObject) {
+            return !((ConfigObject) wrapped).isEmpty();
+        }
+        if (wrapped instanceof ConfigList) {
+            return !((ConfigList) wrapped).isEmpty();
+        }
+        return false;
     }
 
     @Override
     public boolean isList() {
-        return value.isList();
+        return !isNull() && wrapped.valueType() == ConfigValueType.LIST;
     }
 
     @Override
     public boolean isMap() {
-        return value.isMap();
+        return !isNull() && wrapped.valueType() == ConfigValueType.OBJECT;
     }
 
     @Override
-    public boolean isScalar() {
-        return value.isScalar();
+    public boolean isPrimitive() {
+        return !isNull() && (wrapped.valueType() == ConfigValueType.BOOLEAN
+                || wrapped.valueType() == ConfigValueType.NUMBER
+                || wrapped.valueType() == ConfigValueType.STRING);
     }
 
     @Override
     public boolean isNull() {
-        return value.isNull();
+        return wrapped == null || wrapped.valueType() == ConfigValueType.NULL;
     }
 
     @Override
-    public Object getValue() {
-        return value.getValue();
-    }
-
-    @Override
-    public void setValue(Object value) throws NodeSerializeException {
-        if (value instanceof Map) {
-            this.value = new ValueMap((Map) value);
-        } else if (value instanceof Collection) {
-            this.value = new ValueList();
-        } else {
-            this.value = new ValueScalar(value);
-        }
-    }
-
-    @Override
-    public <T> T getValue(Class<T> type) throws NodeSerializeException {
-        return value.getValue(type);
+    public Object rawValue() {
+        return !isNull() ? wrapped.unwrapped() : null;
     }
 
     @Override
     public <T> T getValue(Class<T> type, T def) throws NodeSerializeException {
-        return value.getValue(type, def);
+        NodeSerializer<T> serializer = serializers.getSerializer(type);
+        return serializer.deserialize(type, this);
     }
 
     @Override
     public <T> List<T> getList(Class<T> type) throws NodeSerializeException {
-        return value.getList(type);
+        if (isList()) {
+            NodeSerializer<T> serializer = serializers.getSerializer(type);
+            List<T> values = new LinkedList<>();
+
+            for (ConfigNode node : childrenList()) {
+                values.add(serializer.deserialize(type, node));
+            }
+
+            return values;
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public List<ConfigNode> childrenList() {
-        return value.childrenList();
+        if (isList()) {
+            ConfigList list = (ConfigList) wrapped;
+            List<ConfigNode> nodes = new LinkedList<>();
+
+            for (ConfigValue el : list) {
+                nodes.add(new SimpleConfigNode(null, this, el, serializers));
+            }
+
+            return nodes;
+        }
+        return Collections.emptyList();
     }
 
     @Override
-    public Map<Object, ConfigNode> childrenMap() {
-        return value.childrenMap();
+    public Map<String, ConfigNode> childrenMap() {
+        if (isMap()) {
+            ConfigObject obj = (ConfigObject) wrapped;
+            Map<String, ConfigNode> map = new LinkedHashMap<>();
+
+            for (Map.Entry<String, ConfigValue> entry : obj.entrySet()) {
+                ConfigNode node = new SimpleConfigNode(entry.getKey(), this, entry.getValue(), serializers);
+                map.put(entry.getKey(), node);
+            }
+
+            return map;
+        }
+        return Collections.emptyMap();
     }
 
     @Override
     public boolean getBoolean(boolean def) {
         try {
-            return value.getValue(Boolean.class, def);
-        } catch (NodeSerializeException e) {
-            return def;
-        }
-    }
-
-    @Override
-    public byte getByte(byte def) {
-        try {
-            return value.getValue(Byte.class, def);
-        } catch (NodeSerializeException e) {
-            return def;
-        }
-    }
-
-    @Override
-    public short getShort(short def) {
-        try {
-            return value.getValue(Short.class, def);
+            return getValue(Boolean.class, def);
         } catch (NodeSerializeException e) {
             return def;
         }
@@ -151,7 +178,7 @@ public class SimpleConfigNode implements ConfigNode {
     @Override
     public int getInt(int def) {
         try {
-            return value.getValue(Integer.class, def);
+            return getValue(Integer.class, def);
         } catch (NodeSerializeException e) {
             return def;
         }
@@ -160,7 +187,7 @@ public class SimpleConfigNode implements ConfigNode {
     @Override
     public long getLong(long def) {
         try {
-            return value.getValue(Long.class, def);
+            return getValue(Long.class, def);
         } catch (NodeSerializeException e) {
             return def;
         }
@@ -169,7 +196,7 @@ public class SimpleConfigNode implements ConfigNode {
     @Override
     public float getFloat(float def) {
         try {
-            return value.getValue(Float.class, def);
+            return getValue(Float.class, def);
         } catch (NodeSerializeException e) {
             return def;
         }
@@ -178,7 +205,7 @@ public class SimpleConfigNode implements ConfigNode {
     @Override
     public double getDouble(double def) {
         try {
-            return value.getValue(Double.class, def);
+            return getValue(Double.class, def);
         } catch (NodeSerializeException e) {
             return def;
         }
@@ -187,9 +214,22 @@ public class SimpleConfigNode implements ConfigNode {
     @Override
     public String getString(String def) {
         try {
-            return value.getValue(String.class, def);
+            return getValue(String.class, def);
         } catch (NodeSerializeException e) {
             return def;
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (isNull()) {
+            return "null";
+        } else if (isMap()) {
+            return childrenMap().toString();
+        } else if (isList()) {
+            return childrenList().toString();
+        } else {
+            return wrapped.unwrapped().toString();
         }
     }
 }
