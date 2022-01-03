@@ -15,6 +15,6 @@ public interface NodeSerializer<T> {
      * @return Deserialized value
      * @throws NodeSerializeException if value cannot be deserialized
      */
-    T deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException;
+    T deserialize(Class<T> type, ConfigNode node) throws NodeSerializeException;
 
 }

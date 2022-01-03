@@ -8,7 +8,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 public class FloatSerializer implements NodeSerializer<Float> {
 
     @Override
-    public Float deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public Float deserialize(Class<Float> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof Float) return (Float) obj;

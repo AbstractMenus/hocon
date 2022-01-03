@@ -8,7 +8,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 public class StringSerializer implements NodeSerializer<String> {
 
     @Override
-    public String deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public String deserialize(Class<String> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof String) return (String) obj;

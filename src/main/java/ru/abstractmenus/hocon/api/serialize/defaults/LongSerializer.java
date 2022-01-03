@@ -8,7 +8,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 public class LongSerializer implements NodeSerializer<Long> {
 
     @Override
-    public Long deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public Long deserialize(Class<Long> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof Long) return (Long) obj;

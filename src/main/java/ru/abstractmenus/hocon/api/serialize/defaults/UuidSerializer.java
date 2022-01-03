@@ -10,7 +10,7 @@ import java.util.UUID;
 public class UuidSerializer implements NodeSerializer<UUID> {
 
     @Override
-    public UUID deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public UUID deserialize(Class<UUID> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof UUID) return (UUID) obj;

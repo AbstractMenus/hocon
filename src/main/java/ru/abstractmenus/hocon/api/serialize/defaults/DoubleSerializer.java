@@ -8,7 +8,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 public class DoubleSerializer implements NodeSerializer<Double> {
 
     @Override
-    public Double deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public Double deserialize(Class<Double> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof Double) return (Double) obj;

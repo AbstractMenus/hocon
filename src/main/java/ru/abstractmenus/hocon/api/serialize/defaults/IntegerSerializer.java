@@ -8,7 +8,7 @@ import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
 public class IntegerSerializer implements NodeSerializer<Integer> {
 
     @Override
-    public Integer deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public Integer deserialize(Class<Integer> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         Object obj = node.rawValue();
         if (obj instanceof Integer) return (Integer) obj;

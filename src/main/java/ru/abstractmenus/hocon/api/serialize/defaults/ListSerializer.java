@@ -11,7 +11,7 @@ import java.util.List;
 public class ListSerializer implements NodeSerializer<List> {
 
     @Override
-    public List deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+    public List deserialize(Class<List> type, ConfigNode node) throws NodeSerializeException {
         Preconditions.checkNodeNull(node);
         List list = new LinkedList();
         for (ConfigNode el : node.childrenList()) {
