@@ -23,7 +23,8 @@ public class ConfigurationLoader {
     }
 
     public ConfigNode load() throws Exception {
-        Config conf = ConfigFactory.parseReader(source.getReader());
+        Config conf = ConfigFactory.parseReader(source.getReader())
+                .resolve();
         return new SimpleConfigNode(null, null, conf.root(), serializers);
     }
 
