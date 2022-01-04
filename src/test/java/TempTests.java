@@ -14,14 +14,19 @@ public class TempTests {
     @Test
     public void test() throws Exception {
         ConfigSource source = ConfigSources.resource("test.conf", this);
+        NodeSerializers serializers = NodeSerializers.defaults();
+        NodeSerializers serializers1 = NodeSerializers.defaults();
+
+        serializers1.register(User.class, new UserSerializer());
+
         ConfigurationLoader loader = ConfigurationLoader.builder()
                 .source(source)
-                .serializers(NodeSerializers.defaults()
-                        .register(User.class, new UserSerializer()))
+                .serializers(serializers.merge(serializers1))
                 .build();
         ConfigNode node = loader.load();
 
         System.out.println(node.toString());
+        System.out.println(node.node("str").getList(String.class));
         System.out.println(node.node("map", "param1").getString());
         System.out.println(node.node("map", "param15").getString());
         System.out.println(node.node("list").getList(String.class));
@@ -49,7 +54,7 @@ public class TempTests {
     private class UserSerializer implements NodeSerializer<User> {
 
         @Override
-        public User deserialize(Class<?> type, ConfigNode node) throws NodeSerializeException {
+        public User deserialize(Class<User> type, ConfigNode node) throws NodeSerializeException {
             User user = new User();
             user.name = node.node("name").getString();
             user.age = node.node("age").getInt();
