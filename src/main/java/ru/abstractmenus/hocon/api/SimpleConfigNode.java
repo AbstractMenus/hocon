@@ -124,9 +124,9 @@ class SimpleConfigNode implements ConfigNode {
     public <T> List<T> getList(Class<T> type) throws NodeSerializeException {
         if (!isNull()) {
             NodeSerializer<T> serializer = serializers.getSerializer(type);
+            List<T> values = new ArrayList<>();
 
             if (isList()) {
-                List<T> values = new LinkedList<>();
                 for (ConfigNode node : childrenList()) {
                     values.add(serializer.deserialize(type, node));
                 }
@@ -136,7 +136,9 @@ class SimpleConfigNode implements ConfigNode {
             T value = serializer.deserialize(type, this);
 
             if (value != null)
-                return Collections.singletonList(value);
+                values.add(value);
+
+            return values;
         }
 
         return Collections.emptyList();
