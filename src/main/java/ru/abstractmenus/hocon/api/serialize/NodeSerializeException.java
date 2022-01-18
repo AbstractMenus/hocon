@@ -4,6 +4,8 @@ import ru.abstractmenus.hocon.api.ConfigNode;
 
 public class NodeSerializeException extends Exception {
 
+    private ConfigNode causeNode;
+
     public NodeSerializeException(String message) {
         super(message);
     }
@@ -17,6 +19,11 @@ public class NodeSerializeException extends Exception {
     }
 
     public NodeSerializeException(ConfigNode node, String message) {
-        super((node.wrapped().origin().lineNumber() != -1 ? "[line "+node.wrapped().origin().lineNumber()+"]" : "") + message);
+        super(message);
+        this.causeNode = node;
+    }
+
+    public ConfigNode getCauseNode() {
+        return causeNode;
     }
 }
