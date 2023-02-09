@@ -498,6 +498,9 @@ final class ConfigDocumentParser {
                                         + key
                                         + "' was already seen");
                             }
+
+//                            duplicatesPrefix.append('_');
+//                            key = duplicatesPrefix.toString() + key
                         }
                         keys.put(key, true);
                     } else {

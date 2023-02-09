@@ -218,6 +218,7 @@ public final class ConfigParser {
 
         private AbstractConfigObject parseObject(ConfigNodeObject n) {
             Map<String, AbstractConfigValue> values = new LinkedHashMap<String, AbstractConfigValue>();
+            StringBuilder duplicatePrefix = new StringBuilder();
             SimpleConfigOrigin objectOrigin = lineOrigin();
             boolean lastWasNewline = false;
 
@@ -326,6 +327,8 @@ public final class ConfigParser {
                                     + "' was already seen at "
                                     + existing.origin().description());
                             } else {
+                                //duplicatePrefix.append('_');
+                                //key = duplicatePrefix + key;
                                 newValue = newValue.withFallback(existing);
                             }
                         }
