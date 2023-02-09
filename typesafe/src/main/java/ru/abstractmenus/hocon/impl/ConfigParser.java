@@ -327,9 +327,9 @@ public final class ConfigParser {
                                     + "' was already seen at "
                                     + existing.origin().description());
                             } else {
-                                //duplicatePrefix.append('_');
-                                //key = duplicatePrefix + key;
-                                newValue = newValue.withFallback(existing);
+                                duplicatePrefix.append('_');
+                                key = duplicatePrefix + key;
+                                //newValue = newValue.withFallback(existing);
                             }
                         }
                         values.put(key, newValue);
