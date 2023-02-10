@@ -3,6 +3,7 @@ package ru.abstractmenus.hocon.api;
 import ru.abstractmenus.hocon.ConfigValue;
 import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public interface ConfigNode {
      * Get wrapped config value
      * @return Wrapped value
      */
+    @Nullable
     ConfigValue wrapped();
 
     /**
@@ -30,6 +32,7 @@ public interface ConfigNode {
      * Get parent of this node
      * @return Parent of node or null if this is root node
      */
+    @Nullable
     ConfigNode parent();
 
     /**
@@ -78,8 +81,9 @@ public interface ConfigNode {
 
     /**
      * Get raw native Java value
-     * @return raw config value
+     * @return raw config value or null
      */
+    @Nullable
     Object rawValue();
 
     /**
@@ -89,6 +93,7 @@ public interface ConfigNode {
      * @return Deserialized value or null
      * @throws NodeSerializeException in cases when object cannot be deserialized
      */
+    @Nullable
     default <T> T getValue(Class<T> type) throws NodeSerializeException {
         return getValue(type, null);
     }
@@ -98,7 +103,7 @@ public interface ConfigNode {
      * @param type Type of the value
      * @param <T> Type of the value
      * @param def default value returned if value absent
-     * @return Deserialized value or null
+     * @return Deserialized value or default one
      * @throws NodeSerializeException in cases when object cannot be deserialized
      */
     <T> T getValue(Class<T> type, T def) throws NodeSerializeException;
@@ -210,6 +215,7 @@ public interface ConfigNode {
      * Get String value or null as default
      * @return String value or null as default
      */
+    @Nullable
     default String getString() {
         return getString(null);
     }
