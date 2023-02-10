@@ -1,4 +1,4 @@
-package ru.abstractmenus.hocon.api.source;
+package org.abstractmenus.hocon.api.source;
 
 import java.io.*;
 import java.net.URL;

@@ -1,9 +1,9 @@
-package ru.abstractmenus.hocon.api.serialize.defaults;
+package org.abstractmenus.hocon.api.serialize.defaults;
 
-import ru.abstractmenus.hocon.api.ConfigNode;
-import ru.abstractmenus.hocon.api.Preconditions;
-import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
-import ru.abstractmenus.hocon.api.serialize.NodeSerializer;
+import org.abstractmenus.hocon.api.ConfigNode;
+import org.abstractmenus.hocon.api.Preconditions;
+import org.abstractmenus.hocon.api.serialize.NodeSerializeException;
+import org.abstractmenus.hocon.api.serialize.NodeSerializer;
 
 public class FloatSerializer implements NodeSerializer<Float> {
 

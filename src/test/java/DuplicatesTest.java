@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Test;
-import ru.abstractmenus.hocon.api.ConfigNode;
-import ru.abstractmenus.hocon.api.ConfigurationLoader;
-import ru.abstractmenus.hocon.api.serialize.NodeSerializers;
-import ru.abstractmenus.hocon.api.source.ConfigSource;
-import ru.abstractmenus.hocon.api.source.ConfigSources;
+import org.abstractmenus.hocon.api.ConfigNode;
+import org.abstractmenus.hocon.api.ConfigurationLoader;
+import org.abstractmenus.hocon.api.serialize.NodeSerializers;
+import org.abstractmenus.hocon.api.source.ConfigSource;
+import org.abstractmenus.hocon.api.source.ConfigSources;
 
 public class DuplicatesTest {
 

@@ -1,7 +1,7 @@
-package ru.abstractmenus.hocon.api;
+package org.abstractmenus.hocon.api;
 
+import org.abstractmenus.hocon.api.serialize.NodeSerializeException;
 import ru.abstractmenus.hocon.ConfigValue;
-import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
 
 import javax.annotation.Nullable;
 import java.util.List;

@@ -1,8 +1,8 @@
-package ru.abstractmenus.hocon.api;
+package org.abstractmenus.hocon.api;
 
+import org.abstractmenus.hocon.api.serialize.NodeSerializers;
+import org.abstractmenus.hocon.api.source.ConfigSource;
 import ru.abstractmenus.hocon.*;
-import ru.abstractmenus.hocon.api.source.ConfigSource;
-import ru.abstractmenus.hocon.api.serialize.NodeSerializers;
 
 public class ConfigurationLoader {
 

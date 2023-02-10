@@ -1,6 +1,6 @@
-package ru.abstractmenus.hocon.api.serialize;
+package org.abstractmenus.hocon.api.serialize;
 
-import ru.abstractmenus.hocon.api.serialize.defaults.*;
+import org.abstractmenus.hocon.api.serialize.defaults.*;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,6 +1,6 @@
-package ru.abstractmenus.hocon.api;
+package org.abstractmenus.hocon.api;
 
-import ru.abstractmenus.hocon.api.serialize.NodeSerializeException;
+import org.abstractmenus.hocon.api.serialize.NodeSerializeException;
 
 public final class Preconditions {
 
